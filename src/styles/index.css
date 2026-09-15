@@ -1,29 +1,32 @@
-  @import './font.css';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-  :root {
-    font-family: Arial, Helvetica, sans-serif;
-  }
+:root {
+  --font-primary: 'Inter', sans-serif;
+  --font-fallback: Arial, Helvetica, sans-serif;
+}
 
-  * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-  }
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
 
-  body {
-    margin: auto;
-    max-width: 1400px;
-    min-height: 100vh;
-    padding: 10px;
-  }
+body {
+  font-family: var(--font-primary), var(--font-fallback);
+  margin: auto;
+  max-width: 1400px;
+  min-height: 100vh;
+  padding: 10px;
+}
 
-  a {
-    text-decoration: inherit;
-    color: inherit;
-  }
+a {
+  text-decoration: inherit;
+  color: inherit;
+}
 
-  button,
-  input,
-  select {
-    font-family: inherit;
-  }
+button,
+input,
+select {
+  font-family: inherit;
+}
+
