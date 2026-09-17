@@ -23,7 +23,7 @@ A professional admin dashboard for an e-commerce platform built with React and T
 - [x] Vite + React + TypeScript setup
 - [x] Git & GitHub setup
 - [x] Project folder structure
-- [ ] React Router
+- [x] React Router
 - [ ] Admin Layout
 - [ ] Authentication
 - [ ] Products Management
