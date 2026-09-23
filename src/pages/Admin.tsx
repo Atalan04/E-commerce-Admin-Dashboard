@@ -3,6 +3,8 @@ import Header from "../layout/Header"
 import Sidebar from "../layout/Sidebar"
 
 function Admin() {
+      console.log("ADMIN RENDER");
+
   return (
     <div>
       <Header/>

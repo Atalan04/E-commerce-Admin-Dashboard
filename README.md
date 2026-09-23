@@ -24,8 +24,8 @@ A professional admin dashboard for an e-commerce platform built with React and T
 - [x] Git & GitHub setup
 - [x] Project folder structure
 - [x] React Router
-- [ ] Admin Layout
-- [ ] Authentication
+- [x] Admin Layout
+- [x] Authentication
 - [ ] Products Management
 - [ ] Categories Management
 - [ ] Users Management
