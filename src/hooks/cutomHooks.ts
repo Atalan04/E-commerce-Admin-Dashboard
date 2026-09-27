@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext,useState,useEffect } from "react";
 import { AuthContext } from "../contexts/AuthContextProvider";
 
 const useAuth = ()=> {
@@ -10,4 +10,18 @@ const useAuth = ()=> {
   return context;
 }
 
-export {useAuth} 
+const useDebounce= <T>(value:T,delay:number=500): T => {
+  const [debounceValue,setDebounceValue] =useState<T>(value)
+
+
+useEffect(()=> {
+  const timer=setTimeout(()=> {
+    setDebounceValue(value)
+  },delay)
+  return ()=> {
+    clearTimeout(timer)
+  }
+},[value,delay])
+return debounceValue
+}
+export {useAuth,useDebounce} 
