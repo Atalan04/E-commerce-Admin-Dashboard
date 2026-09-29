@@ -59,11 +59,32 @@ interface GetProductsParams {
   sortOrder?: "asc" | "desc" | string;
 }
 
+//for creating new product
+interface CreateProductInput {
+  title: string;
+  description: string;
+  price: number | "";
+  stock: number | "";
+  imageUrl: string;
+  categoryId: string;
+}
+
+interface UpdateProductInput extends Partial<CreateProductInput> {
+  id: string;
+}
+
+interface SingleProductResponse {
+  success: boolean;
+  data: ProductTypes;
+}
 export type {
   ProductTypes,
   Category,
   ProductRes,
   FullResponse,
   GetProductsParams,
-  CategoriesResponse
+  CategoriesResponse,
+  CreateProductInput,
+  UpdateProductInput,
+  SingleProductResponse,
 };
