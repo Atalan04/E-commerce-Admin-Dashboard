@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getCategories } from "../services/api";
+import { getCategories } from "../services/CategoriesFn";
+import CategoryIcons from "../constants/CategoryIcons";
+
 
 function Sidebar() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -31,9 +33,18 @@ function Sidebar() {
           <div>
             {isLoading && <span>Loading...</span>}
             <NavLink to="/products">All Products</NavLink>
-            {categories.map((cat) => (
-              <NavLink key={cat.id} to={`/products?categoryId=${cat.id}`}>
-                {cat.name}
+            <NavLink to="/categories">Manage Categories</NavLink>
+            {categories.map((cat: any) => (
+              <NavLink
+                key={cat.id}
+                to={`/products?categoryId=${cat.id}`}
+              >
+                <CategoryIcons
+                  iconName={cat.icon}
+                  categoryName={cat.name}
+                  className="w-3.5 h-3.5 shrink-0 text-gray-500"
+                />
+                <span className="truncate">{cat.name}</span>
               </NavLink>
             ))}
           </div>

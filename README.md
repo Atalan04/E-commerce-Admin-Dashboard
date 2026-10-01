@@ -26,8 +26,8 @@ A professional admin dashboard for an e-commerce platform built with React and T
 - [x] React Router
 - [x] Admin Layout
 - [x] Authentication
-- [ ] Products Management
-- [ ] Categories Management
+- [x] Products Management
+- [x] Categories Management
 - [ ] Users Management
 - [ ] Orders Management
 - [ ] Dashboard

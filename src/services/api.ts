@@ -2,7 +2,6 @@ import axios from "axios";
 
 import type { LoginTypes, Authresponse } from "../types/authTypes";
 import type {
-  CategoriesResponse,
   FullResponse,
   GetProductsParams,
   CreateProductInput,
@@ -51,10 +50,7 @@ const getProductById = async (id: string): Promise<ProductTypes> => {
   return response.data.data || response.data
 }
 
-const getCategories = async (): Promise<CategoriesResponse> => {
-  const response = await api.get<CategoriesResponse>("/categories");
-  return response.data;
-};
+
 
 const addProduct = async (
   newProduct: CreateProductInput,
@@ -89,7 +85,6 @@ export {
   loginApi,
   getProducts,
   getProductById,
-  getCategories,
   addProduct,
   updateProduct,
   deleteProduct,

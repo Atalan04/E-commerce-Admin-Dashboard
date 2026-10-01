@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
-import { addProduct, updateProduct, getCategories } from "../services/api";
+import { addProduct, updateProduct } from "../services/api";
+import {getCategories} from "../services/CategoriesFn"
 import type {
   ProductTypes,
   CreateProductInput,
