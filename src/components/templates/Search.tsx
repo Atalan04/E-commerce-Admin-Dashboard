@@ -1,35 +1,46 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-
+import  { useEffect, useState } from "react";
+import { FiSearch, FiX } from "react-icons/fi";
 import { useDebounce } from "../../hooks/cutomHooks";
-import { getProducts } from "../../services/api";
 
-function Search() {
-  const [search,setSearch] = useState("")
+interface SearchProps {
+  onSearch: (value: string) => void;
+  placeholder?: string;
+  delay?: number;
+  className?: string;
+}
 
-  const debounceSearch = useDebounce(search,500)
-  
-  const {data, isFetching,}=useQuery({
-    queryKey:[ "products-search",debounceSearch],
-    queryFn:()=> {
-      return getProducts({search:debounceSearch})
-    },
-    enabled:debounceSearch.trim().length>0
-  })
+export function Search({
+  onSearch,
+  placeholder = "Search...",
+  delay = 500
+}: SearchProps) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearch = useDebounce(searchTerm, delay);
 
-  const searchResults = data?.data ?? []
+  useEffect(() => {
+    onSearch(debouncedSearch.trim());
+  }, [debouncedSearch, onSearch]);
 
-  const SearchHandler =(e: React.ChangeEvent<HTMLInputElement>)=> {
-    setSearch(e.target.value)
-  } 
+  const handleClear = () => {
+    setSearchTerm("");
+    onSearch("");
+  };
 
   return (
     <div>
-      <input type="text" id="search" placeholder="Search" value={search} onChange={SearchHandler} />
-      {isFetching && <p>loading ....</p>}
-      <ul>
-        {searchResults.map(item => <li key={item.id}>{item.title}</li>)}
-      </ul>
+      <FiSearch  />
+      <input
+        type="text"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        placeholder={placeholder}/>
+      {searchTerm && (
+        <button
+          type="button"
+          onClick={handleClear}>
+          <FiX  />
+        </button>
+      )}
     </div>
   );
 }

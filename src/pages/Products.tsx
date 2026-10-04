@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import { getProducts, deleteProduct } from "../services/api";
 import type { ProductTypes } from "../types/productsCategoryTypes";
 
-import Search from "../components/templates/Search";
+import SearchProducts from "../components/templates/SearchProducts";
 import Filter from "../components/templates/Filter";
 import ProductModal from "../components/ProductsModal";
 import ProductDetailsModal from "../components/ProductDetailsModal";
@@ -27,7 +27,7 @@ function Products() {
   const categoryId = searchParams.get("categoryId") || undefined;
   const sortBy = searchParams.get("sortBy") || undefined;
   const sortOrder = searchParams.get("sortOrder") || undefined;
-  const search = searchParams.get("search") || undefined;
+  const search = searchParams.get("SearchProducts") || undefined;
 
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["products", page, limit, categoryId, sortBy, sortOrder, search],
@@ -90,7 +90,7 @@ function Products() {
         </button>
       </div>
 
-      <Search />
+      <SearchProducts />
       <Filter />
 
       <ul>
