@@ -1,4 +1,4 @@
- import type { OrderSummary } from "../types/ordersType"
+ import type { OrderSummary } from "./ordersTypes"
  
  type UserRole = "ADMIN" | "CUSTOMER" | "USER";
 

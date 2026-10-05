@@ -14,7 +14,7 @@ import Pagination from "../components/templates/Pagination";
 import { getUsers, getUserById, deleteUser } from "../services/usersFn";
 import type { UserItem } from "../types/usersTypes";
 
-export default function UsersManagement() {
+function UsersManagement() {
   const queryClient = useQueryClient();
 
   const [page, setPage] = useState<number>(1);
@@ -150,7 +150,7 @@ export default function UsersManagement() {
               </button>
             </div>
 
-            <div className="p-6 space-y-4">
+            <div>
               {isDetailLoading ? (
                 <div>Loading user info...</div>
               ) : userDetailRes?.data ? (
@@ -247,3 +247,5 @@ export default function UsersManagement() {
     </div>
   );
 }
+
+export default UsersManagement
