@@ -22,11 +22,6 @@ const statusColorMap: Record<
     text: "text-blue-700 dark:text-blue-400",
     dot: "bg-blue-500",
   },
-  PROCESSING: {
-    bg: "bg-indigo-50 dark:bg-indigo-950/40",
-    text: "text-indigo-700 dark:text-indigo-400",
-    dot: "bg-indigo-500",
-  },
   SHIPPED: {
     bg: "bg-purple-50 dark:bg-purple-950/40",
     text: "text-purple-700 dark:text-purple-400",
@@ -61,8 +56,8 @@ function OrdersManagement() {
       getOrders({
         page,
         limit,
-        search,
-        status: statusFilter,
+        search: search.trim() || undefined,
+        status: statusFilter === "ALL" ? undefined : statusFilter,
       }),
   });
 
@@ -115,25 +110,31 @@ function OrdersManagement() {
   }, [hasServerMeta, rawOrders, page, limit]);
 
   return (
-    <div>
-      <div>
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1>
-            <FiShoppingBag />
+          <h1 className="text-xl md:text-2xl font-bold text-slate-800 flex items-center gap-2">
+            <FiShoppingBag className="text-blue-600" />
             Orders Management
           </h1>
-          <p>Monitor, inspect and update customer purchase orders</p>
+          <p className="text-xs md:text-sm text-slate-500">
+            Monitor, inspect and update customer purchase orders
+          </p>
         </div>
 
-        <button onClick={() => refetch()}>
+        <button
+          onClick={() => refetch()}
+          className="inline-flex items-center gap-2 px-3.5 py-2 border border-slate-200 bg-white hover:bg-slate-50 rounded-lg text-xs font-semibold text-slate-700 shadow-xs transition"
+        >
           <FiRefreshCw
-            className={`w-4 h-4 ${isFetching ? "animate-spin text-blue-600" : ""}`}
+            className={`w-3.5 h-3.5 ${isFetching ? "animate-spin text-blue-600" : ""}`}
           />
           Refresh
         </button>
       </div>
-      <div>
-        <div>
+
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+        <div className="w-full md:w-80">
           <Search
             onSearch={(val) => {
               setSearch(val);
@@ -143,20 +144,23 @@ function OrdersManagement() {
           />
         </div>
 
-        <div>
-          <FiFilter />
-          <span>Status:</span>
+        <div className="w-full md:w-auto flex items-center gap-2">
+          <FiFilter className="text-slate-400 shrink-0" />
+          <span className="text-xs font-semibold text-slate-600 whitespace-nowrap">
+            Status:
+          </span>
           <select
             value={statusFilter}
             onChange={(e) => {
               setStatusFilter(e.target.value as OrderStatus | "ALL");
               setPage(1);
             }}
+            className="w-full md:w-auto px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition"
           >
             <option value="ALL">All Statuses</option>
             <option value="PENDING">PENDING</option>
             <option value="PAID">PAID</option>
-            <option value="PROCESSING">PROCESSING</option>
+            {/* <option value="PROCESSING">PROCESSING</option> */}
             <option value="SHIPPED">SHIPPED</option>
             <option value="DELIVERED">DELIVERED</option>
             <option value="CANCELLED">CANCELLED</option>
@@ -164,11 +168,11 @@ function OrdersManagement() {
         </div>
       </div>
 
-      <div>
-        <div>
-          <table>
+      <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-sm">
             <thead>
-              <tr>
+              <tr className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600 uppercase tracking-wider">
                 <th className="py-4 px-6">Order ID</th>
                 <th className="py-4 px-6">Customer</th>
                 <th className="py-4 px-6">Date</th>
@@ -178,19 +182,19 @@ function OrdersManagement() {
                 <th className="py-4 px-6 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-slate-100">
               {isLoading ? (
                 <tr>
-                  <td colSpan={7}>
-                    <div>
-                      <div></div>
+                  <td colSpan={7} className="py-8 text-center text-slate-400">
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
                       <span>Loading orders...</span>
                     </div>
                   </td>
                 </tr>
               ) : isError ? (
                 <tr>
-                  <td colSpan={7}>
+                  <td colSpan={7} className="py-8 text-center text-rose-500">
                     Failed to load orders:{" "}
                     {(error as Error)?.message || "Unknown error"}
                   </td>
@@ -204,24 +208,35 @@ function OrdersManagement() {
                   };
 
                   return (
-                    <tr key={order.id}>
-                      <td>#{order.id.slice(0, 8)}...</td>
-                      <td>
-                        <div>{order.user?.name || "N/A"}</div>
-                        <div>{order.user?.email || "-"}</div>
+                    <tr
+                      key={order.id}
+                      className="hover:bg-slate-50/80 transition-colors"
+                    >
+                      <td className="py-4 px-6 font-mono text-xs text-blue-600 font-semibold">
+                        #{order.id.slice(0, 8)}...
                       </td>
-                      <td>
+                      <td className="py-4 px-6">
+                        <div className="font-medium text-slate-800">
+                          {order.user?.name || "N/A"}
+                        </div>
+                        <div className="text-2xs text-slate-400">
+                          {order.user?.email || "-"}
+                        </div>
+                      </td>
+                      <td className="py-4 px-6 text-xs text-slate-500">
                         {new Date(order.createdAt).toLocaleDateString("en-US", {
                           month: "short",
                           day: "numeric",
                           year: "numeric",
                         })}
                       </td>
-                      <td>
+                      <td className="py-4 px-6 text-xs text-slate-600">
                         {order.items?.length || order._count?.items || 0}{" "}
                         item(s)
                       </td>
-                      <td>${order.totalAmount.toFixed(2)}</td>
+                      <td className="py-4 px-6 font-mono tabular-nums font-semibold text-slate-900">
+                        ${order.totalAmount.toFixed(2)}
+                      </td>
                       <td className="py-4 px-6">
                         <span
                           className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${statusInfo.bg} ${statusInfo.text}`}
@@ -233,7 +248,10 @@ function OrdersManagement() {
                         </span>
                       </td>
                       <td className="py-4 px-6 text-right">
-                        <button onClick={() => handleOpenDetail(order)}>
+                        <button
+                          onClick={() => handleOpenDetail(order)}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-semibold rounded-lg transition"
+                        >
                           <FiEye />
                           View
                         </button>
@@ -243,13 +261,15 @@ function OrdersManagement() {
                 })
               ) : (
                 <tr>
-                  <td colSpan={7}>No orders found matching your criteria.</td>
+                  <td colSpan={7} className="py-8 text-center text-slate-400">
+                    No orders found matching your criteria.
+                  </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
-        <div>
+        <div className="p-4 border-t border-slate-100">
           <Pagination
             meta={paginationMeta}
             onPageChange={(newPage) => setPage(newPage)}

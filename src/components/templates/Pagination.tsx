@@ -6,14 +6,14 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-export function Pagination({ meta, onPageChange}: PaginationProps) {
+export function Pagination({ meta, onPageChange }: PaginationProps) {
   if (!meta || meta.totalPages <= 1) return null;
 
   const { page, totalPages, totalItems, hasPrevPage, hasNextPage } = meta;
 
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
-    const maxVisible = 5; 
+    const maxVisible = 5;
     if (totalPages <= maxVisible) {
       for (let i = 1; i <= totalPages; i++) pages.push(i);
     } else {
@@ -43,27 +43,28 @@ export function Pagination({ meta, onPageChange}: PaginationProps) {
   const pageNumbers = getPageNumbers();
 
   return (
-    <div>
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
       <div>
-        Page <span>{page}</span> of{" "}
-        <span >{totalPages}</span>{" "}
+        Page <span className="font-semibold text-slate-800">{page}</span> of{" "}
+        <span className="font-semibold text-slate-800">{totalPages}</span>{" "}
         <span>({totalItems} total items)</span>
       </div>
 
-      <div >
+      <div className="flex items-center gap-1.5">
         <button
           type="button"
           onClick={() => onPageChange(page - 1)}
-          disabled={!hasPrevPage} >
+          disabled={!hasPrevPage}
+          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed font-medium transition"
+        >
           <FiChevronLeft />
           Previous
         </button>
-        <div >
+        <div className="flex items-center gap-1">
           {pageNumbers.map((item, index) => {
             if (item === "...") {
               return (
-                <span
-                  key={`ellipsis-${index}`}>
+                <span key={`ellipsis-${index}`} className="px-2 text-slate-400">
                   ...
                 </span>
               );
@@ -77,10 +78,10 @@ export function Pagination({ meta, onPageChange}: PaginationProps) {
                 key={`page-${pageNum}`}
                 type="button"
                 onClick={() => onPageChange(pageNum)}
-                className={`min-w-[34px] h-[34px] flex items-center justify-center text-sm font-medium rounded-lg transition-colors ${
+                className={`min-w-8 h-8 flex items-center justify-center text-xs font-semibold rounded-lg transition-colors${
                   isActive
-                    ? "bg-blue-600 text-white shadow-sm hover:bg-blue-700"
-                    : "border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
+                    ? "bg-blue-600 text-black shadow-sm hover:bg-blue-700 hover:text-white"
+                    : "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
                 }`}
               >
                 {pageNum}
@@ -91,7 +92,9 @@ export function Pagination({ meta, onPageChange}: PaginationProps) {
         <button
           type="button"
           onClick={() => onPageChange(page + 1)}
-          disabled={!hasNextPage}>
+          disabled={!hasNextPage}
+          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed font-medium transition"
+        >
           Next
           <FiChevronRight className="w-4 h-4" />
         </button>

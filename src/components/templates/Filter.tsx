@@ -21,6 +21,7 @@ function Filter() {
       newParams.set("sortBy", field);
       newParams.set("sortOrder", order);
     }
+    newParams.set("page", "1");
     setSearchParams(newParams);
   };
 
@@ -29,12 +30,15 @@ function Filter() {
   };
 
   return (
-    <div>
-      <label htmlFor="sort-select">Sort By:</label>
+    <div className="flex items-center gap-2">
+      <label htmlFor="sort-select" className="text-xs font-medium text-slate-500 whitespace-nowrap">
+        Sort By:
+      </label>
       <select
         id="sort-select"
         value={currentFilterValue}
         onChange={sortHandler}
+        className="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-slate-700 cursor-pointer transition"
       >
         <option value="">Default</option>
         <option value="createdAt-desc">Newest</option>

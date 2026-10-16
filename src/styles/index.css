@@ -1,6 +1,29 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-:root {
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --text-2xs: 0.6875rem;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+
+body {
+  font-family: var(--font-sans);
+  background-color: #f8fafc; /* slate-50 */
+  color: #0f172a;            /* slate-900 */
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* :root {
   --font-primary: 'Inter', sans-serif;
   --font-fallback: Arial, Helvetica, sans-serif;
 }
@@ -28,5 +51,4 @@ button,
 input,
 select {
   font-family: inherit;
-}
-
+} */

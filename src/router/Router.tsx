@@ -8,6 +8,7 @@ import CategoriesManagement from "../layout/CategoriesManagement";
 import UsersManagement from "../layout/UsersManagement";
 import OrdersManagements from "../layout/OrdersManagements";
 import ProtectedRoute from "../components/ProtectedRoute";
+import Dashboard from "../layout/Dashboard";
 
 function Router() {
   return (
@@ -15,7 +16,7 @@ function Router() {
       <Route path="/login" element={<AuthenticationPage />} />
       <Route element={<ProtectedRoute />}>
         <Route path="/" element={<Admin />}>
-          <Route index element={<h1>Dashboard</h1>} />
+          <Route index element={<Dashboard />} />
           <Route path="products" element={<Products />} />
           <Route path="categories" element={<CategoriesManagement />} />
           <Route path="users" element={<UsersManagement />} />

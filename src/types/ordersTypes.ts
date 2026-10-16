@@ -3,7 +3,6 @@ import type { PaginationMeta } from "../types/usersTypes";
 export type OrderStatus =
   | "PENDING"
   | "PAID"
-  | "PROCESSING"
   | "SHIPPED"
   | "DELIVERED"
   | "CANCELLED";
