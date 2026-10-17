@@ -2,7 +2,7 @@ const e2p = (s: number | string): string => {
   return s.toString().replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[Number(d)] ?? d);
 };
 
-const p2e = (s: number | String): string => {
+const p2e = (s: number | string): string => {
   return s
     .toString()
     .replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d).toString());

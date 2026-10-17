@@ -7,7 +7,7 @@ const getCategories = async (): Promise<CategoriesResponse> => {
   return response.data;
 };
 
-const createCategory = async (payload: { name: string }) => {
+const createCategory = async (payload: { name: string; icon?: string }) => {
   const response = await api.post("/categories", payload);
   return response.data;
 };
@@ -15,11 +15,13 @@ const createCategory = async (payload: { name: string }) => {
 const updateCategory = async ({
   id,
   name,
+  icon,
 }: {
   id: string;
   name: string;
+  icon?: string;
 }) => {
-  const response = await api.patch(`/categories/${id}`, { name });
+  const response = await api.put(`/categories/${id}`, { name, icon });
   return response.data;
 };
 

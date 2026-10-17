@@ -1,10 +1,14 @@
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient, keepPreviousData  } from "@tanstack/react-query";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  keepPreviousData,
+} from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-import { getProducts, deleteProduct } from "../services/api";
+import { getProducts, deleteProduct,getErrorMessage } from "../services/api";
 import type { ProductTypes } from "../types/productsCategoryTypes";
-
 import SearchProducts from "../components/templates/SearchProducts";
 import Filter from "../components/templates/Filter";
 import ProductModal from "../components/ProductsModal";
@@ -14,11 +18,12 @@ function Products() {
   const queryClient = useQueryClient();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [selectedProduct, setSelectedProduct] = useState<ProductTypes | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<ProductTypes | null>(
+    null,
+  );
   const [detailProductId, setDetailProductId] = useState<string | null>(null);
 
   const [searchParams, setSearchParams] = useSearchParams();
-
 
   const page = Number(searchParams.get("page")) || 1;
   const limit = Number(searchParams.get("limit")) || 9;
@@ -27,7 +32,7 @@ function Products() {
   const sortOrder = searchParams.get("sortOrder") || undefined;
   const search = searchParams.get("search") || undefined;
 
-  const { data, isPending,isPlaceholderData, isError, error } = useQuery({
+  const { data, isPending, isPlaceholderData, isError, error } = useQuery({
     queryKey: ["products", page, limit, categoryId, sortBy, sortOrder, search],
     queryFn: () => {
       return getProducts({
@@ -48,14 +53,12 @@ function Products() {
       queryClient.invalidateQueries({ queryKey: ["products"] });
       alert("Product is successfully deleted.");
     },
-    onError: (err: any) => {
-      alert(
-        `Error on deleting: ${err?.response?.data?.message || err.message}`,
-      );
+   onError: (err: unknown) => {
+      alert(`Error on deleting: ${getErrorMessage(err, "Failed to delete product")}`);
     },
   });
 
-   const handlePageChange = (newPage: number) => {
+  const handlePageChange = (newPage: number) => {
     const newParams = new URLSearchParams(searchParams);
     newParams.set("page", String(newPage));
     setSearchParams(newParams);
@@ -78,17 +81,25 @@ function Products() {
     }
   };
 
-  if (isPending) return <div className="p-6 text-sm text-slate-500">getting products ....</div>;
-  if (isError) return <div className="p-6 text-sm text-rose-600">Error: {error.message}</div>;
+  if (isPending)
+    return (
+      <div className="p-6 text-sm text-slate-500">getting products ....</div>
+    );
+  if (isError)
+    return (
+      <div className="p-6 text-sm text-rose-600">Error: {error.message}</div>
+    );
 
- const products = data?.data;
-const pagination = (data as any)?.pagination;
+  const products = data?.data;
+  const pagination = (
+  data as { pagination?: { totalPages?: number } } | undefined
+)?.pagination;
 
-const totalPages = pagination?.totalPages ?? 1;
-const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+  const totalPages = pagination?.totalPages ?? 1;
+  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
-const hasPrevPage = page > 1;
-const hasNextPage = page < totalPages;
+  const hasPrevPage = page > 1;
+  const hasNextPage = page < totalPages;
 
   return (
     <div className="space-y-6">
@@ -115,11 +126,11 @@ const hasNextPage = page < totalPages;
         <Filter />
       </div>
 
-       <ul
+      <ul
         className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 transition-opacity ${
           isPlaceholderData ? "opacity-60" : "opacity-100"
         }`}
-        >
+      >
         {products?.map((item) => (
           <li
             key={item.id}
@@ -185,7 +196,7 @@ const hasNextPage = page < totalPages;
         ))}
       </ul>
 
-     <div className="flex items-center justify-center gap-1.5 pt-4">
+      <div className="flex items-center justify-center gap-1.5 pt-4">
         <button
           onClick={() => handlePageChange(Math.max(page - 1, 1))}
           disabled={!hasPrevPage}
@@ -207,7 +218,7 @@ const hasNextPage = page < totalPages;
             {pageNum}
           </button>
         ))}
-      <button
+        <button
           onClick={() => handlePageChange(page + 1)}
           disabled={!hasNextPage}
           className="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition"

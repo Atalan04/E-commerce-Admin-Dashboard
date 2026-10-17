@@ -39,6 +39,8 @@ const statusColorMap: Record<
   },
 };
 
+const EMPTY_ORDERS: OrderSummary[] = [];
+
 function OrdersManagement() {
   const queryClient = useQueryClient();
 
@@ -80,7 +82,7 @@ function OrdersManagement() {
     updateStatusMutation.mutate({ id: orderId, status: newStatus });
   };
 
-  const rawOrders = data?.data || [];
+  const rawOrders = data?.data ?? EMPTY_ORDERS;
   const hasServerMeta = Boolean(data?.meta);
 
   const paginationMeta: PaginationMeta = useMemo(() => {
@@ -160,7 +162,6 @@ function OrdersManagement() {
             <option value="ALL">All Statuses</option>
             <option value="PENDING">PENDING</option>
             <option value="PAID">PAID</option>
-            {/* <option value="PROCESSING">PROCESSING</option> */}
             <option value="SHIPPED">SHIPPED</option>
             <option value="DELIVERED">DELIVERED</option>
             <option value="CANCELLED">CANCELLED</option>
@@ -213,7 +214,7 @@ function OrdersManagement() {
                       className="hover:bg-slate-50/80 transition-colors"
                     >
                       <td className="py-4 px-6 font-mono text-xs text-blue-600 font-semibold">
-                        #{order.id.slice(0, 8)}...
+                        #{order.id.slice(0, 8).toUpperCase()}
                       </td>
                       <td className="py-4 px-6">
                         <div className="font-medium text-slate-800">

@@ -3,6 +3,7 @@ interface Category {
   id: string;
   name: string;
   slug: string;
+  icon?: string;
   description: string;
   createdAt: string;
   _count?: {
@@ -24,6 +25,7 @@ interface ProductTypes {
   price: number;
   stock: number;
   imageUrl: string;
+  images:string[]
   categoryId: string;
   category?: Category;
   createdAt: string;

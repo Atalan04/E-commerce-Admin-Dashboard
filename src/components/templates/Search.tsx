@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { FiSearch, FiX } from "react-icons/fi";
-import { useDebounce } from "../../hooks/cutomHooks";
+import { useDebounce } from "../../hooks/customHooks";
 
 interface SearchProps {
   onSearch: (value: string) => void;

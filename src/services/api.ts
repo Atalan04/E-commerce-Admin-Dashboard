@@ -19,16 +19,36 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("accessToken");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
 
+const getErrorMessage = (
+  err: unknown,
+  fallback: string = "Something went wrong",
+): string => {
+  if (axios.isAxiosError<{ message?: string }>(err)) {
+    return err.response?.data?.message || err.message || fallback;
+  }
+  if (err instanceof Error) {
+    return err.message;
+  }
+  return "An unexpected error occurred";
+};
+
 const loginApi = async (data: LoginTypes): Promise<Authresponse> => {
   const response = await api.post("/auth/login", data);
   return response.data.data;
+};
+
+const logoutApi = async (): Promise<void> => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+
+  delete api.defaults.headers.common["Authorization"];
 };
 
 const getProducts = async (
@@ -47,10 +67,8 @@ const getProducts = async (
 
 const getProductById = async (id: string): Promise<ProductTypes> => {
   const response = await api.get(`/products/${id}`);
-  return response.data.data || response.data
-}
-
-
+  return response.data.data || response.data;
+};
 
 const addProduct = async (
   newProduct: CreateProductInput,
@@ -82,7 +100,9 @@ const deleteProduct = async (
 
 export default api;
 export {
+  getErrorMessage,
   loginApi,
+  logoutApi,
   getProducts,
   getProductById,
   addProduct,

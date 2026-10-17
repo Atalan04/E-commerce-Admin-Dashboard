@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { isAxiosError } from "axios";
-import { useAuth } from "../hooks/cutomHooks";
+import { useAuth } from "../hooks/customHooks";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import { loginApi } from "../services/api";

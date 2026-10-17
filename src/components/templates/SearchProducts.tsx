@@ -1,59 +1,45 @@
-import { useState,useEffect } from "react";
-import { useDebounce } from "../../hooks/cutomHooks";
+import { useState, useEffect } from "react";
+import { useDebounce } from "../../hooks/customHooks";
 import { useSearchParams } from "react-router-dom";
-
-// import { useQuery } from "@tanstack/react-query";
-// import { getProducts } from "../../services/api";
 
 function SearchProducts() {
   const [searchParams, setSearchParams] = useSearchParams();
   const initialSearch = searchParams.get("search") ?? "";
 
-  const [search,setSearch] = useState<string>(initialSearch);
-  const debounceSearch = useDebounce(search,500)
-  
-  useEffect(() => {
-    const newParams = new URLSearchParams(searchParams);
+  const [search, setSearch] = useState<string>(initialSearch);
+  const debounceSearch = useDebounce(search, 500);
 
-    if (debounceSearch.trim()) {
-      newParams.set("search", debounceSearch.trim());
-    } else {
-      newParams.delete("search");
-    }
-    newParams.set("page", "1");
-    setSearchParams(newParams);
-  }, [debounceSearch]);
+ useEffect(() => {
+    setSearchParams(
+      (prevParams) => {
+        const currentParamValue = prevParams.get("search") ?? "";
+        const nextValue = debounceSearch.trim();
 
+        if (currentParamValue === nextValue) {
+          return prevParams;
+        }
 
-  // const {data, isFetching,}=useQuery({
-  //   queryKey:[ "products-search",debounceSearch],
-  //   queryFn:()=> {
-  //     return getProducts({search:debounceSearch})
-  //   },
-  //   enabled:debounceSearch.trim().length>0
-  // })
+        const newParams = new URLSearchParams(prevParams);
 
-  // const searchResults = data?.data ?? []
-
-   const searchHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (nextValue) {
+          newParams.set("search", nextValue);
+        } else {
+          newParams.delete("search");
+        }
+        newParams.set("page", "1");
+        return newParams;
+      },
+      { replace: true }
+    );
+  }, [debounceSearch, setSearchParams]);
+  const searchHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
-   const handleClear = () => {
+  const handleClear = () => {
     setSearch("");
   };
 
-//   return (
-//     <div>
-//       <input type="text" id="search" placeholder="Search" value={search} onChange={SearchHandler} />
-//       {isFetching && <p>loading ....</p>}
-//       <ul>
-//         {searchResults.map(item => <li key={item.id}>{item.title}</li>)}
-//       </ul>
-//     </div>
-//   );
-// }
-
-return (
+  return (
     <div className="relative w-full">
       <input
         type="text"

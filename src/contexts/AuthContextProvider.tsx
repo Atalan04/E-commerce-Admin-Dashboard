@@ -1,65 +1,53 @@
-import { createContext, useState, useEffect } from "react";
+import { useState } from "react";
 import type {
   AuthContextValue,
   User,
   LoginResponse,
   AuthContextProviderProps,
 } from "../types/authTypes";
+import { AuthContext } from "./AuthContext";
 
-export const AuthContext = createContext<AuthContextValue | undefined>(
-  undefined,
-);
 
-function AuthContextProvider({ children }: AuthContextProviderProps) {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
+function getInitialAuth(): { user: User | null; token: string | null } {
+  try {
     const storedToken = localStorage.getItem("accessToken");
     const storedUser = localStorage.getItem("user");
 
     if (storedToken && storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser) as User;
-        setToken(storedToken);
-        setUser(parsedUser);
-      } catch (error) {
-        console.error("User Format is Unvalid: ", error);
-        localStorage.removeItem("user");
-        localStorage.removeItem("accessToken");
-        setUser(null);
-        setToken(null);
-      }
-    } else {
-      setUser(null);
-      setToken(null);
+      const parsedUser = JSON.parse(storedUser) as User;
+      return { user: parsedUser, token: storedToken };
     }
+  } catch (error) {
+    console.error("User Format is Invalid: ", error);
+    localStorage.removeItem("user");
+    localStorage.removeItem("accessToken");
+  }
 
-    setIsLoading(false);
-  }, []);
+  return { user: null, token: null };
+}
+
+function AuthContextProvider({ children }: AuthContextProviderProps) {
+  const [authState, setAuthState] = useState(getInitialAuth);
 
   const login = (data: LoginResponse): void => {
-    setUser(data.user);
-    setToken(data.token);
+    setAuthState({ user: data.user, token: data.token });
     localStorage.setItem("user", JSON.stringify(data.user));
     localStorage.setItem("accessToken", data.token);
   };
 
   const logout = () => {
-    setUser(null);
-    setToken(null);
+    setAuthState({ user: null, token: null });
     localStorage.removeItem("user");
     localStorage.removeItem("accessToken");
   };
 
   const value: AuthContextValue = {
-    user,
-    isAuthenticated: !!user && !!token,
-    token,
+    user: authState.user,
+    isAuthenticated: !!authState.user && !!authState.token,
+    token: authState.token,
     login,
     logout,
-    isLoading,
+    isLoading: false,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

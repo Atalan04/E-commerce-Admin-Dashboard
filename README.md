@@ -28,8 +28,8 @@ A professional admin dashboard for an e-commerce platform built with React and T
 - [x] Authentication
 - [x] Products Management
 - [x] Categories Management
-- [ ] Users Management
-- [ ] Orders Management
-- [ ] Dashboard
-- [ ] Responsive Design
+- [x] Users Management
+- [x] Orders Management
+- [x] Dashboard
+- [x] Responsive Design
 - [ ] Deployment

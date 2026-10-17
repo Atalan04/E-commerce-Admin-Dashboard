@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getProductById } from "../services/api";
+import type { ProductTypes } from "../types/productsCategoryTypes";
 
 interface ProductDetailsProps {
   productId: string | null;
@@ -16,13 +17,16 @@ function ProductDetailsModal({
     data: product,
     isLoading,
     isError,
-  } = useQuery({
+  } = useQuery<ProductTypes>({
     queryKey: ["product", productId],
     queryFn: () => getProductById(productId!),
     enabled: isOpen && !!productId,
   });
 
   if (!isOpen) return null;
+
+   const displayImage =
+    product?.images?.[0] || product?.imageUrl 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -65,13 +69,17 @@ function ProductDetailsModal({
             <div className="flex gap-4">
               <div className="w-24 h-24 rounded-xl border border-slate-200 overflow-hidden shrink-0 bg-slate-50">
                 <img
-                  src={
-                    Array.isArray(product.imageUrl) &&
-                    product.imageUrl.length > 0
-                      ? product.imageUrl[0]
-                      : (product as any).imageUrl ||
-                        "https://via.placeholder.com/200"
-                  }
+                 src={displayImage}
+                  // src={
+                  //   Array.isArray(product.images) && product.images.length > 0
+                  //     ? product.images[0]
+                  //     : Array.isArray((product as any).imageUrl) &&
+                  //         (product as any).imageUrl.length > 0
+                  //       ? (product as any).imageUrl[0]
+                  //       : (product as any).images ||
+                  //         (product as any).imageUrl ||
+                  //          "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800"
+                  // }
                   alt={product.title}
                   className="h-full w-full object-cover"
                 />

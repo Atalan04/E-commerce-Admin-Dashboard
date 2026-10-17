@@ -6,8 +6,10 @@ import {
   updateCategory,
   deleteCategory,
 } from "../services/CategoriesFn";
-import CategoryIcons from "../constants/CategoryIcons";
-import { AVAILABLE_CATEGORY_ICONS } from "../constants/CategoryIcons";
+import { getErrorMessage } from "../services/api";
+import CategoryIcons from "../components/CategoryIcons";
+
+import { AVAILABLE_CATEGORY_ICONS } from "../constants/catIcons";
 import type { Category } from "../types/productsCategoryTypes";
 
 function CategoriesManagement() {
@@ -41,8 +43,8 @@ function CategoriesManagement() {
       queryClient.invalidateQueries({ queryKey: ["category"] });
       resetForm();
     },
-    onError: (err: any) => {
-      alert(err?.response?.data?.message || "Failed to create category");
+    onError: (err: unknown) => {
+      alert(getErrorMessage(err, "Failed to create category"));
     },
   });
 
@@ -53,8 +55,8 @@ function CategoriesManagement() {
       queryClient.invalidateQueries({ queryKey: ["category"] });
       resetForm();
     },
-    onError: (err: any) => {
-      alert(err?.response?.data?.message || "Failed to update category");
+    onError: (err: unknown) => {
+      alert(getErrorMessage(err, "Failed to update category"));
     },
   });
 
@@ -63,12 +65,12 @@ function CategoriesManagement() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["category"] });
     },
-    onError: (err: any) => {
-      alert(err?.response?.data?.message || "Failed to delete category");
+    onError: (err: unknown) => {
+      alert(getErrorMessage(err, "Failed to delete category"));
     },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
 
@@ -87,7 +89,7 @@ function CategoriesManagement() {
   const handleEditClick = (cat: Category) => {
     setEditingCategory(cat);
     setName(cat.name);
-    setSelectedIcon((cat as any).icon || "tag");
+    setSelectedIcon(cat.icon || "tag");
   };
 
   const handleDelete = (cat: Category) => {
@@ -233,7 +235,7 @@ function CategoriesManagement() {
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600">
                   <CategoryIcons
-                    iconName={(cat as any).icon}
+                    iconName={cat.icon}
                     categoryName={cat.name}
                     className="w-5 h-5 text-blue-600"
                   />
