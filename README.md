@@ -32,4 +32,4 @@ A professional admin dashboard for an e-commerce platform built with React and T
 - [x] Orders Management
 - [x] Dashboard
 - [x] Responsive Design
-- [ ] Deployment
+- [x] Deployment
