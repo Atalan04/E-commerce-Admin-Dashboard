@@ -70,7 +70,7 @@ function CategoriesManagement() {
     },
   });
 
-  const handleSubmit = (e: React.SubmitEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
 
@@ -109,18 +109,19 @@ function CategoriesManagement() {
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <div className="p-4 md:p-6 max-w-4xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">
+        <h1 className="text-xl md:text-2xl font-bold text-gray-800">
           Category Management
         </h1>
-        <p className="text-sm text-gray-500">
+        <p className="text-xs md:text-sm text-gray-500">
           Create, edit, and assign icons to store categories
         </p>
       </div>
+
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-5 rounded-xl shadow-sm border border-gray-200 mb-8"
+        className="bg-white p-4 md:p-5 rounded-xl shadow-sm border border-gray-200 mb-8"
       >
         <div className="flex flex-col sm:flex-row items-center gap-3">
           <div className="w-11 h-11 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center shrink-0">
@@ -135,7 +136,7 @@ function CategoriesManagement() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Category name (e.g. Laptops, Running Shoes...)"
-            className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"
+            className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition text-sm"
             disabled={isSubmitting}
           />
 
@@ -143,12 +144,12 @@ function CategoriesManagement() {
             <button
               type="submit"
               disabled={isSubmitting || !name.trim()}
-              className="flex-1 sm:flex-none px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 transition shadow-sm"
+              className="flex-1 sm:flex-none px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium text-sm hover:bg-blue-700 disabled:opacity-50 transition shadow-sm"
             >
               {isSubmitting
                 ? "Saving..."
                 : editingCategory
-                  ? "Update Category"
+                  ? "Update"
                   : "Add Category"}
             </button>
 
@@ -156,13 +157,14 @@ function CategoriesManagement() {
               <button
                 type="button"
                 onClick={resetForm}
-                className="px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition"
+                className="px-4 py-2.5 bg-gray-100 text-gray-700 text-sm rounded-lg hover:bg-gray-200 transition"
               >
                 Cancel
               </button>
             )}
           </div>
         </div>
+
         <div className="mt-5 pt-4 border-t border-gray-100">
           <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2.5">
             Select Category Icon:
@@ -200,28 +202,31 @@ function CategoriesManagement() {
           </div>
         </div>
       </form>
+
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="p-4 bg-gray-50/70 border-b border-gray-200 flex justify-between items-center">
-          <h2 className="font-semibold text-gray-700">Categories List</h2>
+          <h2 className="font-semibold text-gray-700 text-sm md:text-base">
+            Categories List
+          </h2>
           <span className="text-xs bg-gray-200 text-gray-700 px-2.5 py-1 rounded-full font-medium">
             {categories.length} items
           </span>
         </div>
 
         {isLoading && (
-          <div className="p-8 text-center text-gray-500">
+          <div className="p-8 text-center text-gray-500 text-sm">
             Loading categories...
           </div>
         )}
 
         {isError && (
-          <div className="p-8 text-center text-red-500">
+          <div className="p-8 text-center text-red-500 text-sm">
             Failed to load categories.
           </div>
         )}
 
         {!isLoading && categories.length === 0 && (
-          <div className="p-8 text-center text-gray-400">
+          <div className="p-8 text-center text-gray-400 text-sm">
             No categories found. Create your first category above!
           </div>
         )}
@@ -230,10 +235,10 @@ function CategoriesManagement() {
           {categories.map((cat) => (
             <li
               key={cat.id}
-              className="p-4 flex items-center justify-between hover:bg-gray-50/80 transition"
+              className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-gray-50/80 transition"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600">
+                <div className="w-10 h-10 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0">
                   <CategoryIcons
                     iconName={cat.icon}
                     categoryName={cat.name}
@@ -241,32 +246,23 @@ function CategoriesManagement() {
                   />
                 </div>
 
-                <div>
-                  <div className="flex items-center gap-4">
-                    <span className="font-semibold text-gray-800">
-                      {cat.name}
+                <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+                  <span className="font-semibold text-gray-800 text-sm md:text-base">
+                    {cat.name}
+                  </span>
+                  {cat._count?.products !== undefined && (
+                    <span className="text-2xs sm:text-xs bg-gray-100 text-gray-600 px-2.5 py-0.5 rounded-full font-medium border border-gray-200 whitespace-nowrap">
+                      {cat._count.products} products
                     </span>
-                    {/* <span className="text-xs text-gray-400 font-mono">
-                      /{cat.slug}
-                    </span> */}
-                    {cat._count?.products !== undefined && (
-                      <span className="text-xs bg-gray-100 text-gray-600 px-2.5 py-0.5 rounded-full font-medium border border-gray-200 whitespace-nowrap">
-                        {cat._count.products} products
-                      </span>
-                    )}
-                  </div>
-                  {/* {cat.description && (
-                    <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">
-                      {cat.description}
-                    </p>
-                  )} */}
+                  )}
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+
+              <div className="flex items-center justify-end gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-100">
                 <button
                   type="button"
                   onClick={() => handleEditClick(cat)}
-                  className="px-3 py-1.5 text-xs font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-md transition"
+                  className="px-3 py-1.5 text-xs font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-md transition shrink-0"
                 >
                   Edit
                 </button>
@@ -274,7 +270,7 @@ function CategoriesManagement() {
                   type="button"
                   onClick={() => handleDelete(cat)}
                   disabled={deleteMutation.isPending}
-                  className="px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-md transition disabled:opacity-50"
+                  className="px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-md transition disabled:opacity-50 shrink-0"
                 >
                   Delete
                 </button>
@@ -286,4 +282,5 @@ function CategoriesManagement() {
     </div>
   );
 }
+
 export default CategoriesManagement;
